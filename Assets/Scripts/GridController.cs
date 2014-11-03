@@ -10,8 +10,9 @@ using System.Collections.Generic;
 public class GridController : MonoBehaviour
 {
 	public GameObject cell;
-	public float cellSize = 2.0f;
 	public float cellSpacing = 5.0f;
+	public Renderer cellBgRenderer;
+		
 	[Range(9, 100)] public int lines = 9;
 	[Range(9, 100)] public int columns = 16;
 
@@ -21,6 +22,7 @@ public class GridController : MonoBehaviour
 	void Awake ()
 	{
 		mygrid = new GameObject[lines, columns];
+		float cellSize = cellBgRenderer.bounds.size.x;
 		for (int i = 0; i < lines; ++i) {
 			for (int j = 0; j < columns; ++j) {
 				GameObject obj = (GameObject)Instantiate (cell, new Vector3 (j * (cellSize + cellSpacing), i * (cellSize + cellSpacing), 0), Quaternion.identity);

@@ -33,8 +33,19 @@ public class PlayerMovement : MonoBehaviour {
 		float h = Input.GetAxisRaw ("Horizontal");
 		float v = Input.GetAxisRaw ("Vertical");
 		
+		CheckAlive();
+		
 		// Move the player around the scene.
 		Move (h, v);
+	}
+		
+	void CheckAlive() {
+		GameObject targetObject = grid[(int)position.y, (int)position.x];
+		CellController cellController = targetObject.GetComponent<CellController>();
+		CellController.Type targetType = cellController.GetCellType();
+		if (targetType == CellController.Type.ENEMY) {
+			PlayerDeath(targetObject);	
+		}
 	}
 		
 	void Move (float h, float v)
@@ -84,8 +95,11 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 	
-	void PlayerDeath(GameObject deathCell) {
-		
+	public void PlayerDeath(GameObject deathCell) {
+		Renderer[] renderers = GetComponentsInChildren<Renderer> ();
+		foreach(Renderer renderer in renderers) {
+			renderer.enabled = false;
+		}
 	}
 	
 	void LevelComplete(GameObject exitCell) {

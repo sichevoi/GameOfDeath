@@ -5,10 +5,11 @@
  */
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CellController : MonoBehaviour {
 
-	SpriteRenderer spriteRenderer; 
+	List<Renderer> enemyRenderers; 
 
 	public enum Type{
 		EMPTY,
@@ -25,7 +26,13 @@ public class CellController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		spriteRenderer = GetComponent<SpriteRenderer> ();
+		Renderer[] renderers = GetComponentsInChildren<Renderer> ();
+		enemyRenderers = new List<Renderer> ();
+		foreach (Renderer renderer in renderers) {
+			if (renderer.CompareTag("Enemy")) {
+				enemyRenderers.Add(renderer);
+			}
+		}
 	}
 	
 	// Update is called once per frame
@@ -34,7 +41,6 @@ public class CellController : MonoBehaviour {
 			animateEnemy();
 		}
 		if (change) {
-			spriteRenderer.color = myColor;
 			change = false;
 		}
 	}
@@ -43,11 +49,11 @@ public class CellController : MonoBehaviour {
 		this.type = type;
 		// set sprite
 		if (Type.ENEMY == type) {
-			myColor = Color.black;
+			showEnemy(true);
 		} else if (Type.EMPTY == type){
-			myColor = Color.red;
+			showEnemy(false);
 		} else {
-			myColor = Color.blue;
+			showEnemy(false);
 		}
 		change = true;
 	}
@@ -58,5 +64,11 @@ public class CellController : MonoBehaviour {
 
 	void animateEnemy() {
 
+	}
+	
+	void showEnemy(bool show) {
+		foreach (Renderer renderer in enemyRenderers) {
+			renderer.enabled = show;
+		}
 	}
 }
