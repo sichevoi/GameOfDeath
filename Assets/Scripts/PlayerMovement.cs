@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour {
 	}
 	
 	bool CanMove(Vector2 position) {
-		return position.x < columns && position.y < lines; 
+		return (position.x < columns && position.y < lines) && (position.x >= 0 && position.y >= 0); 
 	}
 	
 	void PositionToGrid(Vector2 position) {
