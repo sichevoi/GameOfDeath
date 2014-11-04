@@ -33,6 +33,29 @@ public class GridController : MonoBehaviour
 		}
 	}
 	
+	bool restart = false;
+	int nextLevel = 0;
+	float restartTimer;
+	public float restartDelay = 10f;
+	
+	void Update()
+	{
+		if (restart)
+		{
+			restartTimer += Time.deltaTime;
+			
+			if (restartTimer >= restartDelay)
+			{
+				Application.LoadLevel(nextLevel);
+			}
+		}
+	}
+	
+	public void Restart(int level) {
+		restart = true;
+		nextLevel = level;
+	}
+	
 	public GameObject[,] GetGrid() {
 		return mygrid;
 	}
@@ -43,7 +66,7 @@ public class GridController : MonoBehaviour
 			GameObject bottom = mygrid[line, column];
 			float x = bottom.transform.position.x;
 			float y = bottom.transform.position.y + cellSize/2 + cellSpacing * 2;
-			Sprite realExit = (Sprite) Instantiate(exit, new Vector3(x, y, 0), Quaternion.FromToRotation(new Vector3(1, 0, 0), new Vector3(0, 1, 0)));
+			GameObject realExit = (GameObject) Instantiate(exit, new Vector3(x, y, 0), Quaternion.FromToRotation(new Vector3(1, 0, 0), new Vector3(0, 1, 0)));
 		} else {
 			GameObject bottom = mygrid[line, column];
 			float x = bottom.transform.position.x + cellSize/2 + cellSpacing * 2;

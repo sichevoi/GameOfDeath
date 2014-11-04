@@ -9,6 +9,7 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour {
 	public float playerSpeed = 0.5f;
 	public GridController gridController;
+	public Animator levelCompleteAnim;
 	
 	float timeElapsed = 0f;
 	GameObject[,] grid;
@@ -89,6 +90,8 @@ public class PlayerMovement : MonoBehaviour {
 			PlayerDeath(targetObject);	
 		} else if (targetType == CellController.Type.EXIT) {
 			LevelComplete(targetObject);
+			MoveToCell(targetObject);
+			this.position = position;
 		} else {
 			MoveToCell(targetObject);
 			this.position = position;
@@ -100,13 +103,16 @@ public class PlayerMovement : MonoBehaviour {
 		foreach(Renderer renderer in renderers) {
 			renderer.enabled = false;
 		}
+		levelCompleteAnim.SetTrigger("GameOver");
 	}
 	
 	void LevelComplete(GameObject exitCell) {
-
+		levelCompleteAnim.SetTrigger("LevelComplete");
+		gridController.Restart(Application.loadedLevel + 1);
 	}
 	
 	void MoveToCell(GameObject newCell) {
 		transform.position = newCell.transform.position;
+		gridController.Restart(Application.loadedLevel);
 	}
 }
