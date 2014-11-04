@@ -11,9 +11,6 @@ public class GameOfLife : MonoBehaviour
 {
 	public float updatePeriod = 0.5f;
 
-	Dictionary<int, Position[]> levels;
-	Dictionary<int, Position> exits;
-
 	int SIZE = 102;
 
 	int lines;
@@ -41,6 +38,8 @@ public class GameOfLife : MonoBehaviour
 		comingGame = new bool[SIZE, SIZE];
 		
 		init (0, gridController.GetGrid());
+		gridController.DrawExit(exit.getLine(), exit.getColumn());
+		//gridController.DrawExit(8, 11);
 	}
 
 	// Called once per fixed frame
@@ -59,32 +58,35 @@ public class GameOfLife : MonoBehaviour
 	// Initialize the GoL
 	public void init (int levelNum, GameObject[,] objects)
 	{
-			levels = new Dictionary<int, Position[]> (10);
-			exits = new Dictionary<int, Position> (10);
-			// O O O O O O O O O O
-			// O O O O O O O O O O 
-			// O O O O O O O O O O 
-			// O O X O O O O O O O 
-			// O O O O X O O O O O 
-			// O X X O O X X X O O 
-			// O O O O O O O O O O 
-			// O O O O O O O O O O 
-			// O O O O O O O O O O
-			int shift = 45;
-			Position[] level0 = new Position[] { new Position (shift + 3, shift + 1), new Position (shift + 5, shift + 2), new Position (shift + 3, shift + 2), 
-													new Position (shift + 4, shift + 4), new Position (shift + 3, shift + 5), 
-													new Position (shift + 3, shift + 6), new Position (shift + 3, shift + 7) };
-			Position exit0 = new Position(shift + 4, shift + 8);
+			Position[] level;
+			Position exit;
 
-			levels.Add (0, level0);
-			exits.Add(0, exit0);
+			if (Application.loadedLevel == 0) {
+				// O O O O O O O O O O
+				// O O O O O O O O O O 
+				// O O O O O O O O O O 
+				// O O X O O O O O O O 
+				// O O O O X O O O O O 
+				// O X X O O X X X O O 
+				// O O O O O O O O O O 
+				// O O O O O O O O O O 
+				// O O O O O O O O O O
+				int shift = 45;
+				level = new Position[] { new Position (shift + 3, shift + 1), new Position (shift + 5, shift + 2), new Position (shift + 3, shift + 2), 
+														new Position (shift + 4, shift + 4), new Position (shift + 3, shift + 5), 
+														new Position (shift + 3, shift + 6), new Position (shift + 3, shift + 7) };
+				exit = new Position(shift + 8, shift + 4);
+			} else {
+				level = new Position[0];
+				exit = new Position(0, 0);
+			}
 
 			objectsMatrix = objects;
 			
 			horizontalShift = (SIZE - objects.GetLength(0)) / 2 - 1;
 			verticalShift = (SIZE - objects.GetLength(1)) / 2 - 1;
 
-			initGame (level0, exit0);
+			initGame (level, exit);
 			gameToGrid ();
 	}
 
@@ -97,15 +99,15 @@ public class GameOfLife : MonoBehaviour
 			int column = position.getColumn ();
 			activeGame [line, column] = true;
 		}
-		this.exit = exit;
+		this.exit = new Position(exit.getLine() - horizontalShift, exit.getColumn() - verticalShift);
 	}
 
 	// Translate the full grid the visible game objects
 	void gameToGrid ()
 	{
-		
 		int gridLines = objectsMatrix.GetLength (0);
 		int gridColumns = objectsMatrix.GetLength (1);
+		
 		for (int i = 0; i < gridLines; ++i) {
 			for (int j = 0; j < gridColumns; ++j) {
 				GameObject o = objectsMatrix [i, j];
