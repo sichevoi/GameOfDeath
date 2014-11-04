@@ -10,7 +10,8 @@ using System.Collections.Generic;
 public class CellController : MonoBehaviour {
 
 	List<Renderer> enemyRenderers; 
-
+	Animator cellAnimator;
+	
 	public enum Type{
 		EMPTY,
 		ENEMY,
@@ -22,10 +23,9 @@ public class CellController : MonoBehaviour {
 
 	Color myColor;
 
-	bool change = false;
-
 	// Use this for initialization
 	void Start () {
+		cellAnimator = GetComponent<Animator> ();
 		Renderer[] renderers = GetComponentsInChildren<Renderer> ();
 		enemyRenderers = new List<Renderer> ();
 		foreach (Renderer renderer in renderers) {
@@ -37,38 +37,28 @@ public class CellController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (Type.ENEMY == type) {
-			animateEnemy();
-		}
-		if (change) {
-			change = false;
-		}
 	}
 
 	public void SetType(Type type) {
 		this.type = type;
 		// set sprite
 		if (Type.ENEMY == type) {
-			showEnemy(true);
+			ShowEnemy(true);
 		} else if (Type.EMPTY == type){
-			showEnemy(false);
+			ShowEnemy(false);
 		} else {
-			showEnemy(false);
+			ShowEnemy(false);
 		}
-		change = true;
 	}
 	
 	public Type GetCellType() {
 		return type;
 	}
-
-	void animateEnemy() {
-
-	}
 	
-	void showEnemy(bool show) {
+	void ShowEnemy(bool show) {
 		foreach (Renderer renderer in enemyRenderers) {
 			renderer.enabled = show;
 		}
+		cellAnimator.SetBool("IsEnemy", show);
 	}
 }

@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour {
 	
 	Vector2 position;
 	Vector2 movement;
-
+	
 	// Use this for initialization
 	void Start () {
 		grid = gridController.GetGrid();

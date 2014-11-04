@@ -12,6 +12,7 @@ public class GameOfLife : MonoBehaviour
 	public float updatePeriod = 0.5f;
 
 	Dictionary<int, Position[]> levels;
+	Dictionary<int, Position> exits;
 
 	int SIZE = 102;
 
@@ -23,12 +24,13 @@ public class GameOfLife : MonoBehaviour
 
 	bool[,] activeGame;
 	bool[,] comingGame;
+	Position exit;
 
 	GameObject[,] objectsMatrix;
 
 	float timeExpired = 0f;
 
-	// Use this for initialization
+	// Initialize the game
 	void Start ()
 	{
 		GridController gridController = GetComponent<GridController> ();
@@ -41,7 +43,8 @@ public class GameOfLife : MonoBehaviour
 		init (0, gridController.GetGrid());
 	}
 
-	// Update is called once per frame
+	// Called once per fixed frame
+	// We make a step in the GoL each updatePeriod seconds.
 	void FixedUpdate ()
 	{
 		if (timeExpired >= updatePeriod) {
@@ -53,9 +56,11 @@ public class GameOfLife : MonoBehaviour
 		}
 	}
 
+	// Initialize the GoL
 	public void init (int levelNum, GameObject[,] objects)
 	{
 			levels = new Dictionary<int, Position[]> (10);
+			exits = new Dictionary<int, Position> (10);
 			// O O O O O O O O O O
 			// O O O O O O O O O O 
 			// O O O O O O O O O O 
@@ -65,24 +70,26 @@ public class GameOfLife : MonoBehaviour
 			// O O O O O O O O O O 
 			// O O O O O O O O O O 
 			// O O O O O O O O O O
-			// O O O O O O O O O O
 			int shift = 45;
-			Position[] level0 = new Position[] { new Position (shift + 4, shift + 1), new Position (shift + 6, shift + 2), new Position (shift + 4, shift + 2), 
-													new Position (shift + 5, shift + 4), new Position (shift + 4, shift + 5), 
-													new Position (shift + 4, shift + 6), new Position (shift + 4, shift + 7) };
+			Position[] level0 = new Position[] { new Position (shift + 3, shift + 1), new Position (shift + 5, shift + 2), new Position (shift + 3, shift + 2), 
+													new Position (shift + 4, shift + 4), new Position (shift + 3, shift + 5), 
+													new Position (shift + 3, shift + 6), new Position (shift + 3, shift + 7) };
+			Position exit0 = new Position(shift + 4, shift + 8);
 
 			levels.Add (0, level0);
+			exits.Add(0, exit0);
 
 			objectsMatrix = objects;
 			
 			horizontalShift = (SIZE - objects.GetLength(0)) / 2 - 1;
 			verticalShift = (SIZE - objects.GetLength(1)) / 2 - 1;
 
-			initGame (level0);
+			initGame (level0, exit0);
 			gameToGrid ();
 	}
 
-	void initGame (Position[] alivePositions)
+	// Put the initial inhabited points to the game grid
+	void initGame (Position[] alivePositions, Position exit)
 	{
 		for (int i = 0; i < alivePositions.Length; ++i) {
 			Position position = alivePositions [i];
@@ -90,10 +97,13 @@ public class GameOfLife : MonoBehaviour
 			int column = position.getColumn ();
 			activeGame [line, column] = true;
 		}
+		this.exit = exit;
 	}
 
+	// Translate the full grid the visible game objects
 	void gameToGrid ()
 	{
+		
 		int gridLines = objectsMatrix.GetLength (0);
 		int gridColumns = objectsMatrix.GetLength (1);
 		for (int i = 0; i < gridLines; ++i) {
@@ -102,13 +112,17 @@ public class GameOfLife : MonoBehaviour
 				CellController cellC = o.GetComponent<CellController> ();
 				if (activeGame [horizontalShift + i, verticalShift + j]) {
 					cellC.SetType (CellController.Type.ENEMY);
+				} else if (exit.getLine() == horizontalShift + i && exit.getColumn() == verticalShift + j) {
+					cellC.SetType(CellController.Type.EXIT);
 				} else {
 					cellC.SetType (CellController.Type.EMPTY);
 				}
 			}
 		}
+		
 	}
 
+	// Run an interation of Game of Life
 	void iterate ()
 	{
 		for (int i = 0; i < lines; ++i) {
