@@ -43,13 +43,18 @@ public class GameOfLife : MonoBehaviour
 		gridController.DrawExit(exit.getLine(), exit.getColumn());
 		//gridController.DrawExit(8, 11);
 	}
+	
+	bool _doStep = false;
+	public void DoStep() {
+		_doStep = true;
+	}
 
 	// Called once per fixed frame
 	// We make a step in the GoL each updatePeriod seconds.
 	void FixedUpdate ()
 	{
-		if (timeExpired >= updatePeriod) {
-			timeExpired = 0f;
+		if (_doStep) {
+			_doStep = false;
 			iterate ();
 			gameToGrid ();
 		} else {
@@ -62,6 +67,8 @@ public class GameOfLife : MonoBehaviour
 	{
 			Position[] level;
 			Position exit;
+			
+			Debug.Log("Application loadedLevel is " + Application.loadedLevel);
 
 			if (Application.loadedLevel == 0) {
 				// O O O O O O O O O O
@@ -299,6 +306,9 @@ public class GameOfLife : MonoBehaviour
 		int column;
 		public Position (int line, int column)
 		{
+			if (column < 0) {
+				Debug.Log("Column is negative " + column);			
+			}
 			this.line = line;
 			this.column = column;
 		}

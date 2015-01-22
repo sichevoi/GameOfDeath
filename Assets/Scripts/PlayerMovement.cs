@@ -28,16 +28,27 @@ public class PlayerMovement : MonoBehaviour {
 		PositionToGrid(Vector2.zero);
 	}
 	
+	float h = 0;
+	float v = 0;
+	
+	public void OnClickHorizontal(int direction) {
+		h = direction;
+	}
+
+	public void OnClickVertical(int direction) {
+		v = direction;
+	}
+	
 	// Update is called once per frame
 	void FixedUpdate () {
-		// Store the input axes.
-		float h = Input.GetAxisRaw ("Horizontal");
-		float v = Input.GetAxisRaw ("Vertical");
-		
+
 		CheckAlive();
 		
 		// Move the player around the scene.
 		Move (h, v);
+		
+		h = 0;
+		v = 0;
 	}
 		
 	void CheckAlive() {
@@ -113,6 +124,5 @@ public class PlayerMovement : MonoBehaviour {
 	
 	void MoveToCell(GameObject newCell) {
 		transform.position = newCell.transform.position;
-		gridController.Restart(Application.loadedLevel);
 	}
 }

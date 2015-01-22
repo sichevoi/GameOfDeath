@@ -20,6 +20,11 @@ public class GridController : MonoBehaviour
 	GameObject[,] mygrid;
 	float cellSize;
 
+	bool restart = false;
+	int nextLevel = 0;
+	float restartTimer;
+	public float restartDelay = 10f;
+	
 	// Use this for initialization
 	void Awake ()
 	{
@@ -32,12 +37,7 @@ public class GridController : MonoBehaviour
 			}
 		}
 	}
-	
-	bool restart = false;
-	int nextLevel = 0;
-	float restartTimer;
-	public float restartDelay = 10f;
-	
+		
 	void Update()
 	{
 		if (restart)
@@ -46,14 +46,16 @@ public class GridController : MonoBehaviour
 			
 			if (restartTimer >= restartDelay)
 			{
+				Debug.Log("Loading next level " + nextLevel);
 				Application.LoadLevel(nextLevel);
 			}
 		}
 	}
 	
 	public void Restart(int level) {
+		Debug.Log("Request to load a level " + level);
 		restart = true;
-		nextLevel = level;
+		nextLevel = nextLevel;
 	}
 	
 	public GameObject[,] GetGrid() {
@@ -63,6 +65,7 @@ public class GridController : MonoBehaviour
 	public void DrawExit(int line, int column) {
 		if (line == lines -1) {
 			//draw exit on top
+			Debug.Log("Drawing exit line " + line + " column " + column );
 			GameObject bottom = mygrid[line, column];
 			float x = bottom.transform.position.x;
 			float y = bottom.transform.position.y + cellSize/2 + cellSpacing * 2;
