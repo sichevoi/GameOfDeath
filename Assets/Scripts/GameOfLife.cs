@@ -4,11 +4,13 @@
  * Script handing Conwey's Game Of Life rules.
  */
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class GameOfLife : MonoBehaviour
 {
+	public Text levelLabel;
 	public float updatePeriod = 0.5f;
 
 	static public int MAX_LEVEL = 1;
@@ -28,24 +30,28 @@ public class GameOfLife : MonoBehaviour
 	GameObject[,] objectsMatrix;
 
 	float timeExpired = 0f;
+	
+	GridController _gridController;
 
 	// Initialize the game
 	void Start ()
 	{
-		GridController gridController = GetComponent<GridController> ();
+		_gridController = GetComponent<GridController> ();
 		
 		lines = SIZE;
 		columns = SIZE;
 		activeGame = new bool[SIZE, SIZE];
 		comingGame = new bool[SIZE, SIZE];
 		
-		init (Application.loadedLevel, gridController.GetGrid());
-		gridController.DrawExit(exit.getLine(), exit.getColumn());
-		//gridController.DrawExit(8, 11);
+		init (Application.loadedLevel, _gridController.GetGrid());
 	}
 	
 	bool _doStep = false;
 	public void DoStep() {
+		//_doStep = true;
+	}
+	
+	public void Step() {
 		_doStep = true;
 	}
 
@@ -69,7 +75,8 @@ public class GameOfLife : MonoBehaviour
 			Position exit;
 			
 			Debug.Log("Application loadedLevel is " + Application.loadedLevel);
-
+			levelLabel.text = "Level " + Application.loadedLevel;
+			
 			if (Application.loadedLevel == 0) {
 				// O O O O O O O O O O
 				// O O O O O O O O O O 
@@ -81,10 +88,10 @@ public class GameOfLife : MonoBehaviour
 				// O O O O O O O O O O 
 				// O O O O O O O O O O
 				int shift = 43;
-				level = new Position[] { new Position (shift + 3, shift + 1), new Position (shift + 5, shift + 2), new Position (shift + 3, shift + 2), 
-														new Position (shift + 4, shift + 4), new Position (shift + 3, shift + 5), 
-														new Position (shift + 3, shift + 6), new Position (shift + 3, shift + 7) };
-				exit = new Position(shift + 10, shift + 6);
+				level = new Position[] { Position.world(shift + 3, shift + 1), Position.world (shift + 5, shift + 2), Position.world (shift + 3, shift + 2), 
+					Position.world (shift + 4, shift + 4), Position.world (shift + 3, shift + 5), 
+					Position.world (shift + 3, shift + 6), Position.world (shift + 3, shift + 7) };
+				exit = Position.world(shift + 10, shift + 6);
 			} else {
 				// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X
 				// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X 0 X
@@ -96,26 +103,26 @@ public class GameOfLife : MonoBehaviour
 				// 0 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 X 0 0 0 0 0 0 0 0 0
 				// 0 0 0 0 0 0 0 0 0 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0
 				
-				int linesShift = 43;
-				int columnsShift = 30;
+				int linesShift = 46;
+				int columnsShift = 43;
 			
-				level = new Position[] { new Position (linesShift + 3, columnsShift + 1), new Position (linesShift + 4, columnsShift + 1), 
-										new Position (linesShift + 3, columnsShift + 2), new Position (linesShift + 4, columnsShift + 2), 
-										new Position (linesShift + 2, columnsShift + 11), new Position (linesShift + 3, columnsShift + 11), new Position (linesShift + 4, columnsShift + 11),
-				new Position (linesShift + 1, columnsShift + 12), new Position (linesShift + 5, columnsShift + 12),
-				new Position (linesShift + 0, columnsShift + 13), new Position (linesShift + 6, columnsShift + 13), 
-				new Position (linesShift + 0, columnsShift + 14), new Position (linesShift + 6, columnsShift + 14),
-				new Position (linesShift + 3, columnsShift + 15), 
-				new Position (linesShift + 1, columnsShift + 16), new Position (linesShift + 5, columnsShift + 16), 
-				new Position (linesShift + 2, columnsShift + 17), new Position (linesShift + 3, columnsShift + 17), new Position (linesShift + 4, columnsShift + 17),
-				new Position (linesShift + 3, columnsShift + 18), 
-				new Position (linesShift + 4, columnsShift + 21), new Position (linesShift + 5, columnsShift + 21), new Position (linesShift + 6, columnsShift + 21),
-				new Position (linesShift + 4, columnsShift + 22), new Position (linesShift + 5, columnsShift + 22), new Position (linesShift + 6, columnsShift + 22),
-				new Position (linesShift + 3, columnsShift + 23), new Position (linesShift + 7, columnsShift + 23), 
-				new Position (linesShift + 2, columnsShift + 25), new Position (linesShift + 3, columnsShift + 25),new Position (linesShift + 7, columnsShift + 25), new Position (linesShift + 8, columnsShift + 25),
-				new Position (linesShift + 5, columnsShift + 35), new Position (linesShift + 6, columnsShift + 35),
-				new Position (linesShift + 5, columnsShift + 36), new Position (linesShift + 6, columnsShift + 36)};
-				exit = new Position(linesShift + 10, columnsShift + 8);
+			level = new Position[] { Position.world (linesShift + 3, columnsShift + 1), Position.world (linesShift + 4, columnsShift + 1), 
+				Position.world (linesShift + 3, columnsShift + 2), Position.world (linesShift + 4, columnsShift + 2), 
+				Position.world (linesShift + 2, columnsShift + 11), Position.world (linesShift + 3, columnsShift + 11), Position.world (linesShift + 4, columnsShift + 11),
+				Position.world (linesShift + 1, columnsShift + 12), Position.world (linesShift + 5, columnsShift + 12),
+				Position.world (linesShift + 0, columnsShift + 13), Position.world (linesShift + 6, columnsShift + 13), 
+				Position.world (linesShift + 0, columnsShift + 14), Position.world (linesShift + 6, columnsShift + 14),
+				Position.world (linesShift + 3, columnsShift + 15), 
+				Position.world (linesShift + 1, columnsShift + 16), Position.world (linesShift + 5, columnsShift + 16), 
+				Position.world (linesShift + 2, columnsShift + 17), Position.world (linesShift + 3, columnsShift + 17), Position.world (linesShift + 4, columnsShift + 17),
+				Position.world (linesShift + 3, columnsShift + 18), 
+				Position.world (linesShift + 4, columnsShift + 21), Position.world (linesShift + 5, columnsShift + 21), Position.world (linesShift + 6, columnsShift + 21),
+				Position.world (linesShift + 4, columnsShift + 22), Position.world (linesShift + 5, columnsShift + 22), Position.world (linesShift + 6, columnsShift + 22),
+				Position.world (linesShift + 3, columnsShift + 23), Position.world (linesShift + 7, columnsShift + 23), 
+				Position.world (linesShift + 2, columnsShift + 25), Position.world (linesShift + 3, columnsShift + 25), Position.world (linesShift + 7, columnsShift + 25), Position.world (linesShift + 8, columnsShift + 25),
+				Position.world (linesShift + 5, columnsShift + 35), Position.world (linesShift + 6, columnsShift + 35),
+				Position.world (linesShift + 5, columnsShift + 36), Position.world (linesShift + 6, columnsShift + 36)};
+				exit = Position.world(linesShift + 3, columnsShift + 12);
 			}
 
 			objectsMatrix = objects;
@@ -136,7 +143,7 @@ public class GameOfLife : MonoBehaviour
 			int column = position.getColumn ();
 			activeGame [line, column] = true;
 		}
-		this.exit = new Position(exit.getLine() - horizontalShift, exit.getColumn() - verticalShift);
+		this.exit = Position.world(exit.getLine(), exit.getColumn());
 	}
 
 	// Translate the full grid the visible game objects
@@ -145,13 +152,17 @@ public class GameOfLife : MonoBehaviour
 		int gridLines = objectsMatrix.GetLength (0);
 		int gridColumns = objectsMatrix.GetLength (1);
 		
+		Debug.Log("Exit line = " + exit.getLine() + " column = " + exit.getColumn());
+		Debug.Log("Shifts: horizontal " + horizontalShift + " vertical " + verticalShift);
+		
 		for (int i = 0; i < gridLines; ++i) {
 			for (int j = 0; j < gridColumns; ++j) {
 				GameObject o = objectsMatrix [i, j];
 				CellController cellC = o.GetComponent<CellController> ();
 				if (activeGame [horizontalShift + i, verticalShift + j]) {
 					cellC.SetType (CellController.Type.ENEMY);
-				} else if (exit.getLine() == i && exit.getColumn() == j) {
+				} else if (exit.getLine() == (i + horizontalShift) && exit.getColumn() == (j + verticalShift)) {
+					_gridController.DrawExit(i, j);
 					cellC.SetType(CellController.Type.EXIT);
 				} else {
 					cellC.SetType (CellController.Type.EMPTY);
@@ -302,15 +313,41 @@ public class GameOfLife : MonoBehaviour
 
 	public class Position
 	{
+	
+		const int zeroLine = 45;
+		const int zeroColumn = 44;
+		
 		int line;
 		int column;
-		public Position (int line, int column)
-		{
+		
+		private Position() {
+		}
+		
+		public static Position world(int line, int column)
+		{			
 			if (column < 0) {
 				Debug.Log("Column is negative " + column);			
 			}
-			this.line = line;
-			this.column = column;
+
+			Position position = new Position();
+			
+			position.line = line;
+			position.column = column;
+			
+			return position;
+		}
+		
+		public static Position game(int line, int column) {
+			if (column < 0) {
+				Debug.Log("Column is negative " + column);			
+			}
+			
+			Position position = new Position();
+			
+			position.line = zeroLine + line;
+			position.column = zeroColumn + column;
+			
+			return position;
 		}
 
 		public Position (int[] position)
@@ -327,6 +364,14 @@ public class GameOfLife : MonoBehaviour
 		public int getColumn ()
 		{
 			return column;
+		}
+		
+		public int getGameLine() {
+			return column - zeroColumn;
+		}
+		
+		public int getGameColumn() {
+			return line - zeroLine;
 		}
 	}
 }

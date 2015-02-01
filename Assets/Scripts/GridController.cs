@@ -23,16 +23,19 @@ public class GridController : MonoBehaviour
 	bool restart = false;
 	int nextLevel = 0;
 	float restartTimer;
-	public float restartDelay = 10f;
+	public float restartDelay = 1f;
 	
 	// Use this for initialization
 	void Awake ()
 	{
 		mygrid = new GameObject[lines, columns];
 		cellSize = cellBgRenderer.bounds.size.x;
+		float offsetX = gameObject.transform.position.x;
+		float offsetY = gameObject.transform.position.y;
 		for (int i = 0; i < lines; ++i) {
 			for (int j = 0; j < columns; ++j) {
-				GameObject obj = (GameObject)Instantiate (cell, new Vector3 (j * (cellSize + cellSpacing), i * (cellSize + cellSpacing), 0), Quaternion.identity);
+				Vector3 position = new Vector3 (j * (cellSize + cellSpacing) + offsetX, i * (cellSize + cellSpacing) + offsetY, 0);
+				GameObject obj = (GameObject)Instantiate (cell, position, Quaternion.identity);
 				mygrid [i, j] = obj;
 			}
 		}
@@ -42,20 +45,24 @@ public class GridController : MonoBehaviour
 	{
 		if (restart)
 		{
-			restartTimer += Time.deltaTime;
-			
-			if (restartTimer >= restartDelay)
-			{
+//			restartTimer += Time.deltaTime;
+//			
+//			if (restartTimer >= restartDelay)
+//			{
 				Debug.Log("Loading next level " + nextLevel);
 				Application.LoadLevel(nextLevel);
-			}
+//			}
 		}
+	}
+	
+	public void onRestart() {
+		Restart(Application.loadedLevel);
 	}
 	
 	public void Restart(int level) {
 		Debug.Log("Request to load a level " + level);
 		restart = true;
-		nextLevel = nextLevel;
+		nextLevel = level;
 	}
 	
 	public GameObject[,] GetGrid() {
@@ -65,7 +72,6 @@ public class GridController : MonoBehaviour
 	public void DrawExit(int line, int column) {
 		if (line == lines -1) {
 			//draw exit on top
-			Debug.Log("Drawing exit line " + line + " column " + column );
 			GameObject bottom = mygrid[line, column];
 			float x = bottom.transform.position.x;
 			float y = bottom.transform.position.y + cellSize/2 + cellSpacing * 2;

@@ -9,6 +9,7 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour {
 	public float playerSpeed = 0.5f;
 	public GridController gridController;
+	public GameOfLife gameOfLife;
 	public Animator levelCompleteAnim;
 	
 	float timeElapsed = 0f;
@@ -47,16 +48,22 @@ public class PlayerMovement : MonoBehaviour {
 		// Move the player around the scene.
 		Move (h, v);
 		
+		if (h != 0 || v != 0) {
+			gameOfLife.Step();
+		}
+		
 		h = 0;
 		v = 0;
 	}
 		
 	void CheckAlive() {
-		GameObject targetObject = grid[(int)position.y, (int)position.x];
-		CellController cellController = targetObject.GetComponent<CellController>();
-		CellController.Type targetType = cellController.GetCellType();
-		if (targetType == CellController.Type.ENEMY) {
-			PlayerDeath(targetObject);	
+		if (position != null && grid != null) {
+			GameObject targetObject = grid[(int)position.y, (int)position.x];
+			CellController cellController = targetObject.GetComponent<CellController>();
+			CellController.Type targetType = cellController.GetCellType();
+			if (targetType == CellController.Type.ENEMY) {
+				PlayerDeath(targetObject);	
+			}
 		}
 	}
 		
