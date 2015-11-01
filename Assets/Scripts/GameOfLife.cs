@@ -71,41 +71,41 @@ public class GameOfLife : MonoBehaviour
 	// Initialize the GoL
 	public void init (int levelNum, GameObject[,] objects)
 	{
-			Position[] level;
-			Position exit;
+		Position[] level;
+		Position exit;
+		
+		Debug.Log("Application loadedLevel is " + Application.loadedLevel);
+		levelLabel.text = "Level " + Application.loadedLevel;
+//			levelNum = 2;
+		if (levelNum == 0) {
+			// O O O O O O O O O O
+			// O O O O O O O O O O 
+			// O O O O O O O O O O 
+			// O O X O O O O O O O 
+			// O O O O X O O O O O 
+			// O X X O O X X X O O 
+			// O O O O O O O O O O 
+			// O O O O O O O O O O 
+			// O O O O O O O O O O
+			int shift = 43;
+			level = new Position[] { Position.world(shift + 3, shift + 1), Position.world (shift + 5, shift + 2), Position.world (shift + 3, shift + 2), 
+				Position.world (shift + 4, shift + 4), Position.world (shift + 3, shift + 5), 
+				Position.world (shift + 3, shift + 6), Position.world (shift + 3, shift + 7) };
+			exit = Position.world(shift + 10, shift + 6);
+		} else if (levelNum == 1) {
+			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X
+			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X 0 X
+			// 0 0 0 0 0 0 0 0 0 0 0 0 0 X X 0 0 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0 0 X X
+			// 0 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 X 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0 0 X X
+			// 0 X X 0 0 0 0 0 0 0 0 X 0 0 0 0 0 X 0 0 0 X X 0 0 0
+			// 0 X X 0 0 0 0 0 0 0 0 X 0 0 0 X 0 X X 0 0 0 0 X 0 X
+			// 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 0 0 X 0 0 0 0 0 0 0 X
+			// 0 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 X 0 0 0 0 0 0 0 0 0
+			// 0 0 0 0 0 0 0 0 0 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0
 			
-			Debug.Log("Application loadedLevel is " + Application.loadedLevel);
-			levelLabel.text = "Level " + Application.loadedLevel;
-			
-			if (Application.loadedLevel == 0) {
-				// O O O O O O O O O O
-				// O O O O O O O O O O 
-				// O O O O O O O O O O 
-				// O O X O O O O O O O 
-				// O O O O X O O O O O 
-				// O X X O O X X X O O 
-				// O O O O O O O O O O 
-				// O O O O O O O O O O 
-				// O O O O O O O O O O
-				int shift = 43;
-				level = new Position[] { Position.world(shift + 3, shift + 1), Position.world (shift + 5, shift + 2), Position.world (shift + 3, shift + 2), 
-					Position.world (shift + 4, shift + 4), Position.world (shift + 3, shift + 5), 
-					Position.world (shift + 3, shift + 6), Position.world (shift + 3, shift + 7) };
-				exit = Position.world(shift + 10, shift + 6);
-			} else {
-				// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X
-				// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X 0 X
-				// 0 0 0 0 0 0 0 0 0 0 0 0 0 X X 0 0 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0 0 X X
-				// 0 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 X 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0 0 X X
-				// 0 X X 0 0 0 0 0 0 0 0 X 0 0 0 0 0 X 0 0 0 X X 0 0 0
-				// 0 X X 0 0 0 0 0 0 0 0 X 0 0 0 X 0 X X 0 0 0 0 X 0 X
-				// 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 0 0 X 0 0 0 0 0 0 0 X
-				// 0 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 X 0 0 0 0 0 0 0 0 0
-				// 0 0 0 0 0 0 0 0 0 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0
-				
-				int linesShift = 46;
-				int columnsShift = 43;
-			
+			int linesShift = 46;
+			int columnsShift = 43;
+		
 			level = new Position[] { Position.world (linesShift + 3, columnsShift + 1), Position.world (linesShift + 4, columnsShift + 1), 
 				Position.world (linesShift + 3, columnsShift + 2), Position.world (linesShift + 4, columnsShift + 2), 
 				Position.world (linesShift + 2, columnsShift + 11), Position.world (linesShift + 3, columnsShift + 11), Position.world (linesShift + 4, columnsShift + 11),
@@ -122,16 +122,47 @@ public class GameOfLife : MonoBehaviour
 				Position.world (linesShift + 2, columnsShift + 25), Position.world (linesShift + 3, columnsShift + 25), Position.world (linesShift + 7, columnsShift + 25), Position.world (linesShift + 8, columnsShift + 25),
 				Position.world (linesShift + 5, columnsShift + 35), Position.world (linesShift + 6, columnsShift + 35),
 				Position.world (linesShift + 5, columnsShift + 36), Position.world (linesShift + 6, columnsShift + 36)};
-				exit = Position.world(linesShift + 3, columnsShift + 12);
-			}
-
-			objectsMatrix = objects;
+			exit = Position.world(linesShift + 3, columnsShift + 12);
+		} else {
+//			                 5         10        15        20        25
+			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+			// 0 0 1 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 1 1 0 0
+			// 0 1 0 0 1 0 0 0 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 0 0 0 0 1 0 0 1 0
+			// 0 0 0 0 1 0 0 0 0 0 1 1 0 1 0 0 0 1 0 1 1 0 0 0 0 0 0 1 0 0 0 0
+			// 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0
+			// 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0
+			// 0 0 0 0 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 1 0 0 0 0
+			// 0 0 0 1 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 0 0 0
+			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 			
-			horizontalShift = (SIZE - objects.GetLength(0)) / 2 - 1;
-			verticalShift = (SIZE - objects.GetLength(1)) / 2 - 1;
+			Vector2[] shiftsArray = new Vector2[] {
+				new Vector2(1, 2), new Vector2(1, 3), new Vector2(1, 4), new Vector2(1, 12), new Vector2(1, 18), new Vector2(1, 27), new Vector2(1, 28), new Vector2(1, 29),
+				new Vector2(2, 1), new Vector2(2, 5), new Vector2(2, 11), new Vector2(2, 12), new Vector2(2, 13), new Vector2(2, 17), new Vector2(2, 18), new Vector2(2, 19), new Vector2(2, 27), new Vector2(2, 30),
+				new Vector2(3, 4), new Vector2(3, 10), new Vector2(3, 11), new Vector2(3, 13), new Vector2(3, 17), new Vector2(3, 19), new Vector2(3, 20), new Vector2(3, 27),
+				new Vector2(4, 4), new Vector2(4, 27),
+				new Vector2(5, 4), new Vector2(5, 7), new Vector2(5, 23), new Vector2(5, 27), 
+				new Vector2(6, 4), new Vector2(6, 7), new Vector2(6, 8), new Vector2(6, 22), new Vector2(6, 23), new Vector2(6, 27),
+				new Vector2(7, 3), new Vector2(7, 7), new Vector2(7, 8), new Vector2(7, 22), new Vector2(7, 23), new Vector2(7, 28),
+			};
+			
+			int linesShift = 48;
+			int columnsShift = 35;
+			
+			level = new Position[shiftsArray.Length];
+			for (int i = 0; i < shiftsArray.Length; ++i) {
+				Vector2 shift = shiftsArray[i];
+				level [i] = Position.world(linesShift + (int)shift.x, columnsShift + (int)shift.y);
+			}
+			exit = Position.world(linesShift + 5, columnsShift + 13);
+		}
 
-			initGame (level, exit);
-			gameToGrid ();
+		objectsMatrix = objects;
+		
+		horizontalShift = (SIZE - objects.GetLength(0)) / 2 - 1;
+		verticalShift = (SIZE - objects.GetLength(1)) / 2 - 1;
+
+		initGame (level, exit);
+		gameToGrid ();
 	}
 
 	// Put the initial inhabited points to the game grid
