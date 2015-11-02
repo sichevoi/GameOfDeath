@@ -74,7 +74,6 @@ public class GameOfLife : MonoBehaviour
 		
 		Debug.Log("Application loadedLevel is " + Application.loadedLevel);
 		levelLabel.text = "Level " + Application.loadedLevel;
-			levelNum = 0;
 
 		IDictionary<int, int[]> shiftsMap = new Dictionary<int, int[]>();
 		int linesShift;
