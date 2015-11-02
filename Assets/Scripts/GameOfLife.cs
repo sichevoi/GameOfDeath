@@ -17,19 +17,19 @@ public class GameOfLife : MonoBehaviour
 	
 	int SIZE = 102;
 
-	int lines;
-	int columns;
+	int _lines;
+	int _columns;
 	
-	int horizontalShift;
-	int verticalShift;
+	int _horizontalShift;
+	int _verticalShift;
 
-	bool[,] activeGame;
-	bool[,] comingGame;
-	Position exit;
+	bool[,] _activeGame;
+	bool[,] _comingGame;
+	Position _exit;
 
-	GameObject[,] objectsMatrix;
+	GameObject[,] _objectsMatrix;
 
-	float timeExpired = 0f;
+	float _timeExpired = 0f;
 	
 	GridController _gridController;
 
@@ -38,10 +38,10 @@ public class GameOfLife : MonoBehaviour
 	{
 		_gridController = GetComponent<GridController> ();
 		
-		lines = SIZE;
-		columns = SIZE;
-		activeGame = new bool[SIZE, SIZE];
-		comingGame = new bool[SIZE, SIZE];
+		_lines = SIZE;
+		_columns = SIZE;
+		_activeGame = new bool[SIZE, SIZE];
+		_comingGame = new bool[SIZE, SIZE];
 		
 		init (Application.loadedLevel, _gridController.GetGrid());
 	}
@@ -64,7 +64,7 @@ public class GameOfLife : MonoBehaviour
 			iterate ();
 			gameToGrid ();
 		} else {
-			timeExpired += Time.deltaTime;
+			_timeExpired += Time.deltaTime;
 		}
 	}
 
@@ -76,7 +76,12 @@ public class GameOfLife : MonoBehaviour
 		
 		Debug.Log("Application loadedLevel is " + Application.loadedLevel);
 		levelLabel.text = "Level " + Application.loadedLevel;
-//			levelNum = 2;
+			levelNum = 0;
+
+		IDictionary<int, int[]> shiftsMap = new Dictionary<int, int[]>();
+		int linesShift;
+		int columnsShift;
+		
 		if (levelNum == 0) {
 			// O O O O O O O O O O
 			// O O O O O O O O O O 
@@ -87,11 +92,14 @@ public class GameOfLife : MonoBehaviour
 			// O O O O O O O O O O 
 			// O O O O O O O O O O 
 			// O O O O O O O O O O
-			int shift = 43;
-			level = new Position[] { Position.world(shift + 3, shift + 1), Position.world (shift + 5, shift + 2), Position.world (shift + 3, shift + 2), 
-				Position.world (shift + 4, shift + 4), Position.world (shift + 3, shift + 5), 
-				Position.world (shift + 3, shift + 6), Position.world (shift + 3, shift + 7) };
-			exit = Position.world(shift + 10, shift + 6);
+			linesShift = 43;
+			columnsShift = 43;
+			
+			shiftsMap.Add(new KeyValuePair<int, int[]> (3, new int[] { 1, 2, 5, 6, 7 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]> (4, new int[] { 4 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]> (5, new int[] { 2 }));
+			exit = Position.world(linesShift + 10, columnsShift + 6);
+			
 		} else if (levelNum == 1) {
 			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X
 			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X 0 X
@@ -103,28 +111,22 @@ public class GameOfLife : MonoBehaviour
 			// 0 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 X 0 0 0 0 0 0 0 0 0
 			// 0 0 0 0 0 0 0 0 0 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0
 			
-			int linesShift = 46;
-			int columnsShift = 43;
+			linesShift = 46;
+			columnsShift = 43;
 		
-			level = new Position[] { Position.world (linesShift + 3, columnsShift + 1), Position.world (linesShift + 4, columnsShift + 1), 
-				Position.world (linesShift + 3, columnsShift + 2), Position.world (linesShift + 4, columnsShift + 2), 
-				Position.world (linesShift + 2, columnsShift + 11), Position.world (linesShift + 3, columnsShift + 11), Position.world (linesShift + 4, columnsShift + 11),
-				Position.world (linesShift + 1, columnsShift + 12), Position.world (linesShift + 5, columnsShift + 12),
-				Position.world (linesShift + 0, columnsShift + 13), Position.world (linesShift + 6, columnsShift + 13), 
-				Position.world (linesShift + 0, columnsShift + 14), Position.world (linesShift + 6, columnsShift + 14),
-				Position.world (linesShift + 3, columnsShift + 15), 
-				Position.world (linesShift + 1, columnsShift + 16), Position.world (linesShift + 5, columnsShift + 16), 
-				Position.world (linesShift + 2, columnsShift + 17), Position.world (linesShift + 3, columnsShift + 17), Position.world (linesShift + 4, columnsShift + 17),
-				Position.world (linesShift + 3, columnsShift + 18), 
-				Position.world (linesShift + 4, columnsShift + 21), Position.world (linesShift + 5, columnsShift + 21), Position.world (linesShift + 6, columnsShift + 21),
-				Position.world (linesShift + 4, columnsShift + 22), Position.world (linesShift + 5, columnsShift + 22), Position.world (linesShift + 6, columnsShift + 22),
-				Position.world (linesShift + 3, columnsShift + 23), Position.world (linesShift + 7, columnsShift + 23), 
-				Position.world (linesShift + 2, columnsShift + 25), Position.world (linesShift + 3, columnsShift + 25), Position.world (linesShift + 7, columnsShift + 25), Position.world (linesShift + 8, columnsShift + 25),
-				Position.world (linesShift + 5, columnsShift + 35), Position.world (linesShift + 6, columnsShift + 35),
-				Position.world (linesShift + 5, columnsShift + 36), Position.world (linesShift + 6, columnsShift + 36)};
+			shiftsMap.Add(new KeyValuePair<int, int[]>(0, new int[] { 13, 14 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(1, new int[] { 12, 16 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(2, new int[] { 11, 17, 25 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(3, new int[] { 1, 2, 11, 15, 17, 18, 23, 25}));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(4, new int[] { 1, 2, 11, 17, 21, 22 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(5, new int[] { 12, 16, 21, 22, 35, 36 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(6, new int[] { 13, 14, 21, 22, 35, 36 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(7, new int[] { 23, 25 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(8, new int[] { 25 }));
+			
 			exit = Position.world(linesShift + 3, columnsShift + 12);
 		} else {
-//			                 5         10        15        20        25
+//			             5         10        15        20        25
 			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 			// 0 0 1 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 1 1 0 0
 			// 0 1 0 0 1 0 0 0 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 0 0 0 0 1 0 0 1 0
@@ -135,31 +137,39 @@ public class GameOfLife : MonoBehaviour
 			// 0 0 0 1 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 0 0 0
 			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 			
-			Vector2[] shiftsArray = new Vector2[] {
-				new Vector2(1, 2), new Vector2(1, 3), new Vector2(1, 4), new Vector2(1, 12), new Vector2(1, 18), new Vector2(1, 27), new Vector2(1, 28), new Vector2(1, 29),
-				new Vector2(2, 1), new Vector2(2, 5), new Vector2(2, 11), new Vector2(2, 12), new Vector2(2, 13), new Vector2(2, 17), new Vector2(2, 18), new Vector2(2, 19), new Vector2(2, 27), new Vector2(2, 30),
-				new Vector2(3, 4), new Vector2(3, 10), new Vector2(3, 11), new Vector2(3, 13), new Vector2(3, 17), new Vector2(3, 19), new Vector2(3, 20), new Vector2(3, 27),
-				new Vector2(4, 4), new Vector2(4, 27),
-				new Vector2(5, 4), new Vector2(5, 7), new Vector2(5, 23), new Vector2(5, 27), 
-				new Vector2(6, 4), new Vector2(6, 7), new Vector2(6, 8), new Vector2(6, 22), new Vector2(6, 23), new Vector2(6, 27),
-				new Vector2(7, 3), new Vector2(7, 7), new Vector2(7, 8), new Vector2(7, 22), new Vector2(7, 23), new Vector2(7, 28),
-			};
+			shiftsMap.Add(new KeyValuePair<int, int[]>(1, new int[] { 2, 3, 4, 12, 18, 27, 28, 29 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(2, new int[] { 1, 5, 11, 12, 13, 17, 18, 19, 27, 30 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(3, new int[] { 4, 10, 11, 13, 17, 19, 20, 27 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(4, new int[] { 4, 27 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(5, new int[] { 4, 7, 23, 27 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(6, new int[] { 4, 7, 8, 22, 23, 27 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(7, new int[] { 3, 7, 8, 22, 23, 28 }));
 			
-			int linesShift = 48;
-			int columnsShift = 35;
-			
-			level = new Position[shiftsArray.Length];
-			for (int i = 0; i < shiftsArray.Length; ++i) {
-				Vector2 shift = shiftsArray[i];
-				level [i] = Position.world(linesShift + (int)shift.x, columnsShift + (int)shift.y);
-			}
+			linesShift = 48;
+			columnsShift = 35;
 			exit = Position.world(linesShift + 5, columnsShift + 13);
 		}
 
-		objectsMatrix = objects;
+		int pointsCount = 0;
+		foreach(int[] points in shiftsMap.Values) {
+			pointsCount += points.Length;
+		}
+
+		level = new Position[pointsCount];
+		int index = 0;
+		int[] columns;
+		foreach(int line in shiftsMap.Keys) {
+			shiftsMap.TryGetValue(line, out columns);
+			foreach (int column in columns) {
+				level[index++] = Position.world(linesShift + line, columnsShift + column);
+			}
+		}
 		
-		horizontalShift = (SIZE - objects.GetLength(0)) / 2 - 1;
-		verticalShift = (SIZE - objects.GetLength(1)) / 2 - 1;
+		
+		_objectsMatrix = objects;
+		
+		_horizontalShift = (SIZE - objects.GetLength(0)) / 2 - 1;
+		_verticalShift = (SIZE - objects.GetLength(1)) / 2 - 1;
 
 		initGame (level, exit);
 		gameToGrid ();
@@ -172,27 +182,27 @@ public class GameOfLife : MonoBehaviour
 			Position position = alivePositions [i];
 			int line = position.getLine ();
 			int column = position.getColumn ();
-			activeGame [line, column] = true;
+			_activeGame [line, column] = true;
 		}
-		this.exit = Position.world(exit.getLine(), exit.getColumn());
+		this._exit = Position.world(exit.getLine(), exit.getColumn());
 	}
 
 	// Translate the full grid the visible game objects
 	void gameToGrid ()
 	{
-		int gridLines = objectsMatrix.GetLength (0);
-		int gridColumns = objectsMatrix.GetLength (1);
+		int gridLines = _objectsMatrix.GetLength (0);
+		int gridColumns = _objectsMatrix.GetLength (1);
 		
-		Debug.Log("Exit line = " + exit.getLine() + " column = " + exit.getColumn());
-		Debug.Log("Shifts: horizontal " + horizontalShift + " vertical " + verticalShift);
+		Debug.Log("Exit line = " + _exit.getLine() + " column = " + _exit.getColumn());
+		Debug.Log("Shifts: horizontal " + _horizontalShift + " vertical " + _verticalShift);
 		
 		for (int i = 0; i < gridLines; ++i) {
 			for (int j = 0; j < gridColumns; ++j) {
-				GameObject o = objectsMatrix [i, j];
+				GameObject o = _objectsMatrix [i, j];
 				CellController cellC = o.GetComponent<CellController> ();
-				if (activeGame [horizontalShift + i, verticalShift + j]) {
+				if (_activeGame [_horizontalShift + i, _verticalShift + j]) {
 					cellC.SetType (CellController.Type.ENEMY);
-				} else if (exit.getLine() == (i + horizontalShift) && exit.getColumn() == (j + verticalShift)) {
+				} else if (_exit.getLine() == (i + _horizontalShift) && _exit.getColumn() == (j + _verticalShift)) {
 					_gridController.DrawExit(i, j);
 					cellC.SetType(CellController.Type.EXIT);
 				} else {
@@ -206,10 +216,10 @@ public class GameOfLife : MonoBehaviour
 	// Run an interation of Game of Life
 	void iterate ()
 	{
-		for (int i = 0; i < lines; ++i) {
-			for (int j = 0; j < columns; ++j) {
+		for (int i = 0; i < _lines; ++i) {
+			for (int j = 0; j < _columns; ++j) {
 				int an = aliveNeighb (i, j);
-				comingGame [i, j] = isAlive (activeGame [i, j], an);
+				_comingGame [i, j] = isAlive (_activeGame [i, j], an);
 			}
 		}
 		swapGames ();
@@ -217,9 +227,9 @@ public class GameOfLife : MonoBehaviour
 
 	void swapGames ()
 	{
-		bool[,] tmp = activeGame;
-		activeGame = comingGame;
-		comingGame = tmp;
+		bool[,] tmp = _activeGame;
+		_activeGame = _comingGame;
+		_comingGame = tmp;
 	}
 
 	//Any live cell with fewer than two live neighbours dies, as if caused by under-population.
@@ -248,7 +258,7 @@ public class GameOfLife : MonoBehaviour
 	int bottomLeft (int i, int j)
 	{
 		if (i > 0 && j > 0) {
-			return getInt(activeGame [i - 1, j - 1]);
+			return getInt(_activeGame [i - 1, j - 1]);
 		} else {
 			return 0;
 		}
@@ -260,7 +270,7 @@ public class GameOfLife : MonoBehaviour
 	int bottom (int i, int j)
 	{
 		if (i > 0) {
-			return getInt(activeGame [i - 1, j]);
+			return getInt(_activeGame [i - 1, j]);
 		} else {
 			return 0;
 		}
@@ -271,8 +281,8 @@ public class GameOfLife : MonoBehaviour
 	// (i - 1, j - 1) (i - 1, j) *(i - 1, j + 1)
 	int bottomRight (int i, int j)
 	{
-		if (i > 0 && j < columns - 1) {
-			return getInt(activeGame [i - 1, j + 1]);
+		if (i > 0 && j < _columns - 1) {
+			return getInt(_activeGame [i - 1, j + 1]);
 		} else {
 			return 0;
 		}
@@ -283,8 +293,8 @@ public class GameOfLife : MonoBehaviour
 	// (i - 1, j - 1) (i - 1, j)  (i - 1, j + 1)
 	int right (int i, int j)
 	{
-		if (j < columns - 1) {
-			return getInt(activeGame [i, j + 1]);
+		if (j < _columns - 1) {
+			return getInt(_activeGame [i, j + 1]);
 		} else {
 			return 0;
 		}
@@ -295,8 +305,8 @@ public class GameOfLife : MonoBehaviour
 	// (i - 1, j - 1) (i - 1, j)  (i - 1, j + 1)
 	int topRight (int i, int j)
 	{
-		if (i < lines - 1 && j < columns - 1) {
-			return getInt(activeGame [i + 1, j + 1]);
+		if (i < _lines - 1 && j < _columns - 1) {
+			return getInt(_activeGame [i + 1, j + 1]);
 		} else {
 			return 0;
 		}
@@ -307,8 +317,8 @@ public class GameOfLife : MonoBehaviour
 	// (i - 1, j - 1)  (i - 1, j) (i - 1, j + 1)
 	int top (int i, int j)
 	{
-		if (i < lines - 1) {
-			return getInt(activeGame [i + 1, j]);
+		if (i < _lines - 1) {
+			return getInt(_activeGame [i + 1, j]);
 		} else {
 			return 0;
 		}
@@ -319,8 +329,8 @@ public class GameOfLife : MonoBehaviour
 	//  (i - 1, j - 1) (i - 1, j) (i - 1, j + 1)
 	int topLeft (int i, int j)
 	{
-		if (i < lines - 1 && j > 0) {
-			return getInt(activeGame [i + 1, j - 1]);
+		if (i < _lines - 1 && j > 0) {
+			return getInt(_activeGame [i + 1, j - 1]);
 		} else {
 			return 0;
 		}
@@ -332,7 +342,7 @@ public class GameOfLife : MonoBehaviour
 	int left (int i, int j)
 	{
 		if (j > 0) {
-			return getInt(activeGame [i, j - 1]);
+			return getInt(_activeGame [i, j - 1]);
 		} else {
 			return 0;
 		}
