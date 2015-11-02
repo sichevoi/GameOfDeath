@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2014 Sichevoid <sichevoid@gmail.com>.
  *
  * Script handing player movement.
@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour {
 	int columns;
 	
 	Vector2 position;
-	Vector2 movement;
+	Vector2 _movement;
 	
 	// Use this for initialization
 	void Start () {
@@ -42,15 +42,9 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-
-		CheckAlive();
 		
 		// Move the player around the scene.
-		Move (h, v);
-		
-		if (h != 0 || v != 0) {
-			gameOfLife.Step();
-		}
+		PrepareMove (h, v);
 		
 		h = 0;
 		v = 0;
@@ -67,16 +61,16 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 		
-	void Move (float h, float v)
+	void PrepareMove (float h, float v)
 	{
 		if (h != 0 || v != 0) {
-			movement = Vector2.zero;
+			_movement = Vector2.zero;
 			
-			if (h > 0) movement.x = 1;
-			else if (h < 0) movement.x = -1;
+			if (h > 0) _movement.x = 1;
+			else if (h < 0) _movement.x = -1;
 			
-			if (v > 0) movement.y = 1;
-			else if (v < 0) movement.y = -1;
+			if (v > 0) _movement.y = 1;
+			else if (v < 0) _movement.y = -1;
 			if (timeElapsed == 0) {
 				timeElapsed += Time.deltaTime;
 			}
@@ -84,16 +78,22 @@ public class PlayerMovement : MonoBehaviour {
 
 		if (timeElapsed > playerSpeed) {
 			timeElapsed = 0;
-			if (movement != Vector2.zero) {
-				Vector2 newPosition = position + movement;
+			if (_movement != Vector2.zero) {
+				Vector2 newPosition = position + _movement;
 				if (CanMove(newPosition)) {
-					PositionToGrid(newPosition);
+					DoMove(newPosition);
 				}
-				movement = Vector2.zero;
+				_movement = Vector2.zero;
 			}
 		} else if (timeElapsed > 0){
 			timeElapsed += Time.deltaTime;
 		}
+	}
+	
+	void DoMove (Vector2 newPosition) {
+		PositionToGrid(newPosition);
+		gameOfLife.Step();
+		CheckAlive();
 	}
 	
 	bool CanMove(Vector2 position) {

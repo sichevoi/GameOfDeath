@@ -32,6 +32,8 @@ public class GameOfLife : MonoBehaviour
 	float _timeExpired = 0f;
 	
 	GridController _gridController;
+	
+	bool _doStep = false;
 
 	// Initialize the game
 	void Start ()
@@ -46,13 +48,9 @@ public class GameOfLife : MonoBehaviour
 		init (Application.loadedLevel, _gridController.GetGrid());
 	}
 	
-	bool _doStep = false;
-	public void DoStep() {
-		//_doStep = true;
-	}
-	
 	public void Step() {
 		_doStep = true;
+		Debug.Log("Step called");
 	}
 
 	// Called once per fixed frame
