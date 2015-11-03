@@ -107,12 +107,15 @@ public class PlayerMovement : MonoBehaviour {
 		} else if (timeElapsed > 0){
 			timeElapsed += Time.deltaTime;
 		}
+		
+		if (_movement == Vector2.zero) {
+			CheckAlive();
+		}
 	}
 	
 	void DoMove (Vector2 newPosition) {
 		PositionToGrid(newPosition);
 		gameOfLife.Step();
-		CheckAlive();
 	}
 	
 	bool CanMove(Vector2 position) {
