@@ -120,7 +120,7 @@ public class GameOfLife : MonoBehaviour
 			shiftsMap.Add(new KeyValuePair<int, int[]>(8, new int[] { 25 }));
 			
 			exit = Position.world(linesShift + 3, columnsShift + 12);
-		} else {
+		} else if (levelNum == 2){
 //			             5         10        15        20        25
 			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 			// 0 0 1 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 1 1 0 0
@@ -143,6 +143,68 @@ public class GameOfLife : MonoBehaviour
 			linesShift = 48;
 			columnsShift = 35;
 			exit = Position.world(linesShift + 5, columnsShift + 13);
+		} else {
+//			        ............................**
+//				    ............................**
+//					............................*
+//					.........................*..*
+//					......................*....*
+//					.......**.............**.***.*
+//					.......*..***.*...***......**
+//					......*........*..**
+//					.....****.*.*....*
+//					.....**........*.**
+//					....*.........*****
+//					.***.*...........***
+//			13		*..*.............***
+//					.***.*...........***
+//					....*.........*****
+//					.....**........*.**
+//					.....****.*.*....*
+//					......*........*..**
+//					.......*..***.*...***......**
+//					.......**.............**.***.*
+//					......................*....*
+//					.........................*..*
+//					............................*
+//					............................**
+//					............................**
+
+			linesShift = 50;
+			columnsShift = 36;
+						
+			shiftsMap.Add(new KeyValuePair<int, int[]>(1, new int[] { 13 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(2, new int[] { 12, 14 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(3, new int[] { 12, 14 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(4, new int[] { 12, 14 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(5, new int[] { 12, 13, 14 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(6, new int[] { 11, 15 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(7, new int[] { 9, 10, 12, 14, 16, 17 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(8, new int[] { 6, 7, 9, 17, 19, 20 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(9, new int[] { 6, 9, 17, 20 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(10, new int[] { }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(11, new int[] { 7, 9, 17, 19 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(12, new int[] { 7, 19 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(13, new int[] { 7, 9, 17, 19 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(14, new int[] { }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(15, new int[] { 7, 11, 15, 19 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(16, new int[] { 8, 10, 11, 15, 16, 18 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(17, new int[] { 11, 15 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(18, new int[] { 9, 10, 11, 12, 13, 14, 15, 16, 17 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(19, new int[] { 7, 8, 10, 11, 12, 13, 14, 15, 16, 18, 19 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(20, new int[] { 7, 8, 12, 13, 14, 18, 19 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(21, new int[] { 7, 19 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(22, new int[] { }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(23, new int[] { 5, 6, 20, 21 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(24, new int[] { 6, 20 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(25, new int[] { }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(26, new int[] { 4, 6, 20, 22 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(27, new int[] { 6, 20 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(28, new int[] { 5, 6, 7, 19, 20, 21 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(29, new int[] { 1, 2, 4, 5, 7, 19, 22, 23, 24, 25 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(30, new int[] { 1, 2, 6, 20, 24, 25 }));
+			
+			exit = Position.world(48 + 5, 35 + 13);
 		}
 
 		int pointsCount = 0;
