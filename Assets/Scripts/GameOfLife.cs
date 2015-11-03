@@ -143,7 +143,7 @@ public class GameOfLife : MonoBehaviour
 			linesShift = 48;
 			columnsShift = 35;
 			exit = Position.world(linesShift + 5, columnsShift + 13);
-		} else {
+		} else if (levelNum == 3) {
 //			        ............................**
 //				    ............................**
 //					............................*
@@ -204,7 +204,24 @@ public class GameOfLife : MonoBehaviour
 			shiftsMap.Add(new KeyValuePair<int, int[]>(29, new int[] { 1, 2, 4, 5, 7, 19, 22, 23, 24, 25 }));
 			shiftsMap.Add(new KeyValuePair<int, int[]>(30, new int[] { 1, 2, 6, 20, 24, 25 }));
 			
-			exit = Position.world(48 + 5, 35 + 13);
+			exit = Position.world(53, 48);
+		} else {
+//			*...***
+//			***..*
+//			.*
+
+			shiftsMap.Add(new KeyValuePair<int, int[]>(1, new int[] { 2, 3 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(2, new int[] { 1, 2 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(3, new int[] { 2 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(4, new int[] { }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(5, new int[] { 3 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(6, new int[] { 2,3 }));
+			shiftsMap.Add(new KeyValuePair<int, int[]>(7, new int[] { 3 }));
+
+			linesShift = 47;
+			columnsShift = 47;
+			
+			exit = Position.world(53, 50);
 		}
 
 		int pointsCount = 0;
