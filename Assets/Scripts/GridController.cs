@@ -46,12 +46,9 @@ public class GridController : MonoBehaviour
 		if (restart)
 		{
 			Debug.Log("Loading next level " + nextLevel);
-			Application.LoadLevel(nextLevel);
+			LevelManager levelManager = FindObjectOfType<LevelManager>() as LevelManager;
+			levelManager.RestartLevel();
 		}
-	}
-	
-	public void onRestart() {
-		Restart(Application.loadedLevel);
 	}
 	
 	public void Restart(int level) {

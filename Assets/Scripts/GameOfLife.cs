@@ -45,12 +45,12 @@ public class GameOfLife : MonoBehaviour
 		_activeGame = new bool[SIZE, SIZE];
 		_comingGame = new bool[SIZE, SIZE];
 		
-		init (Application.loadedLevel, _gridController.GetGrid());
+		int levelNum = Toolbox.Instance.currentLevel;
+		init (levelNum, _gridController.GetGrid());
 	}
 	
 	public void Step() {
 		_doStep = true;
-		Debug.Log("Step called");
 	}
 
 	// Called once per fixed frame
@@ -72,9 +72,7 @@ public class GameOfLife : MonoBehaviour
 		Position[] level;
 		Position exit;
 		
-		Debug.Log("Application loadedLevel is " + Application.loadedLevel);
-		levelLabel.text = "Level " + Application.loadedLevel;
-
+		
 		IDictionary<int, int[]> shiftsMap = new Dictionary<int, int[]>();
 		int linesShift;
 		int columnsShift;
@@ -189,10 +187,7 @@ public class GameOfLife : MonoBehaviour
 	{
 		int gridLines = _objectsMatrix.GetLength (0);
 		int gridColumns = _objectsMatrix.GetLength (1);
-		
-		Debug.Log("Exit line = " + _exit.getLine() + " column = " + _exit.getColumn());
-		Debug.Log("Shifts: horizontal " + _horizontalShift + " vertical " + _verticalShift);
-		
+				
 		for (int i = 0; i < gridLines; ++i) {
 			for (int j = 0; j < gridColumns; ++j) {
 				GameObject o = _objectsMatrix [i, j];

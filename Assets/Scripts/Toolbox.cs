@@ -9,6 +9,8 @@ public class Toolbox : Singleton<Toolbox> {
 	// Currently loaded level
 	public int currentLevel = 0;
 	
+	public static int MAX_LEVEL = 3;
+	
 	void Awake () {
 		// Your initialization code here
 	}

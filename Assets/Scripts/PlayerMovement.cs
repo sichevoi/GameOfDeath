@@ -11,20 +11,25 @@ public class PlayerMovement : MonoBehaviour {
 	public GridController gridController;
 	public GameOfLife gameOfLife;
 	public Animator levelCompleteAnim;
+	public float restartTime;
 	
 	float timeElapsed = 0f;
-	GameObject[,] grid;
-	int lines;
-	int columns;
+	GameObject[,] _grid;
+	int _lines;
+	int _columns;
 	
-	Vector2 position;
+	Vector2 _position;
 	Vector2 _movement;
+	
+	bool _isDead = false;
+	bool _isComplete = false;
+	float _restartTimer = 0.0f;
 	
 	// Use this for initialization
 	void Start () {
-		grid = gridController.GetGrid();
-		lines = gridController.lines;
-		columns = gridController.columns;
+		_grid = gridController.GetGrid();
+		_lines = gridController.lines;
+		_columns = gridController.columns;
 		
 		PositionToGrid(Vector2.zero);
 	}
@@ -43,18 +48,30 @@ public class PlayerMovement : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		
-		// Move the player around the scene.
-		PrepareMove (h, v);
-		
-		h = 0;
-		v = 0;
+		if (_isDead || _isComplete) {
+			if (_restartTimer >= restartTime) {
+				LevelManager levelManager = FindObjectOfType<LevelManager>() as LevelManager;
+				if (_isDead) {
+					levelManager.LoadDeath();
+				} else {
+					levelManager.LoadNextLevel();
+				}
+			} else {
+				_restartTimer += Time.fixedDeltaTime;
+			}
+		} else {
+			// Move the player around the scene.
+			PrepareMove (h, v);
+			h = 0;
+			v = 0;
+		}
 	}
 
 	// check whether the player is still alive
 	// should be called after actual move		
 	void CheckAlive() {
-		if (position != null && grid != null) {
-			GameObject targetObject = grid[(int)position.y, (int)position.x];
+		if (_position != null && _grid != null) {
+			GameObject targetObject = _grid[(int)_position.y, (int)_position.x];
 			CellController cellController = targetObject.GetComponent<CellController>();
 			CellController.Type targetType = cellController.GetCellType();
 			if (targetType == CellController.Type.ENEMY) {
@@ -81,7 +98,7 @@ public class PlayerMovement : MonoBehaviour {
 		if (timeElapsed > playerSpeed) {
 			timeElapsed = 0;
 			if (_movement != Vector2.zero) {
-				Vector2 newPosition = position + _movement;
+				Vector2 newPosition = _position + _movement;
 				if (CanMove(newPosition)) {
 					DoMove(newPosition);
 				}
@@ -99,11 +116,11 @@ public class PlayerMovement : MonoBehaviour {
 	}
 	
 	bool CanMove(Vector2 position) {
-		return (position.x < columns && position.y < lines) && (position.x >= 0 && position.y >= 0); 
+		return (position.x < _columns && position.y < _lines) && (position.x >= 0 && position.y >= 0); 
 	}
 	
 	void PositionToGrid(Vector2 position) {
-		GameObject targetObject = grid[(int)position.y, (int)position.x];
+		GameObject targetObject = _grid[(int)position.y, (int)position.x];
 		CellController cellController = targetObject.GetComponent<CellController>();
 		CellController.Type targetType = cellController.GetCellType();
 		if (targetType == CellController.Type.ENEMY) {
@@ -111,10 +128,10 @@ public class PlayerMovement : MonoBehaviour {
 		} else if (targetType == CellController.Type.EXIT) {
 			LevelComplete(targetObject);
 			MoveToCell(targetObject);
-			this.position = position;
+			this._position = position;
 		} else {
 			MoveToCell(targetObject);
-			this.position = position;
+			this._position = position;
 		}
 	}
 	
@@ -124,11 +141,12 @@ public class PlayerMovement : MonoBehaviour {
 			renderer.enabled = false;
 		}
 		levelCompleteAnim.SetTrigger("GameOver");
+		_isDead = true;
 	}
 	
 	void LevelComplete(GameObject exitCell) {
 		levelCompleteAnim.SetTrigger("LevelComplete");
-		gridController.Restart(Application.loadedLevel + 1);
+		_isComplete = true;
 	}
 	
 	void MoveToCell(GameObject newCell) {
