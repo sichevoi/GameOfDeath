@@ -45,13 +45,8 @@ public class GridController : MonoBehaviour
 	{
 		if (restart)
 		{
-//			restartTimer += Time.deltaTime;
-//			
-//			if (restartTimer >= restartDelay)
-//			{
-				Debug.Log("Loading next level " + nextLevel);
-				Application.LoadLevel(nextLevel);
-//			}
+			Debug.Log("Loading next level " + nextLevel);
+			Application.LoadLevel(nextLevel);
 		}
 	}
 	

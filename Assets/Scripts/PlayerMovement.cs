@@ -49,7 +49,9 @@ public class PlayerMovement : MonoBehaviour {
 		h = 0;
 		v = 0;
 	}
-		
+
+	// check whether the player is still alive
+	// should be called after actual move		
 	void CheckAlive() {
 		if (position != null && grid != null) {
 			GameObject targetObject = grid[(int)position.y, (int)position.x];
