@@ -72,190 +72,66 @@ public class GameOfLife : MonoBehaviour
 		Position[] level;
 		Position exit;
 		
-		
+		levelLabel.text = "Level " + levelNum;
+	
 		IDictionary<int, int[]> shiftsMap = new Dictionary<int, int[]>();
 		int linesShift;
 		int columnsShift;
 		
+		linesShift = 47;
+		columnsShift = 47;
+		
+		exit = Position.world(53, 50);
+		
 		if (levelNum == 0) {
-			// O O O O O O O O O O
-			// O O O O O O O O O O 
-			// O O O O O O O O O O 
-			// O O X O O O O O O O 
-			// O O O O X O O O O O 
-			// O X X O O X X X O O 
-			// O O O O O O O O O O 
-			// O O O O O O O O O O 
-			// O O O O O O O O O O
-			linesShift = 43;
-			columnsShift = 43;
-			
-			shiftsMap.Add(new KeyValuePair<int, int[]> (3, new int[] { 1, 2, 5, 6, 7 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]> (4, new int[] { 4 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]> (5, new int[] { 2 }));
-			exit = Position.world(linesShift + 10, columnsShift + 6);
-			
-		} else if (levelNum == 1) {
-			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X
-			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 X 0 X
-			// 0 0 0 0 0 0 0 0 0 0 0 0 0 X X 0 0 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0 0 X X
-			// 0 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 X 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0 0 X X
-			// 0 X X 0 0 0 0 0 0 0 0 X 0 0 0 0 0 X 0 0 0 X X 0 0 0
-			// 0 X X 0 0 0 0 0 0 0 0 X 0 0 0 X 0 X X 0 0 0 0 X 0 X
-			// 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 0 0 X 0 0 0 0 0 0 0 X
-			// 0 0 0 0 0 0 0 0 0 0 0 0 X 0 0 0 X 0 0 0 0 0 0 0 0 0
-			// 0 0 0 0 0 0 0 0 0 0 0 0 0 X X 0 0 0 0 0 0 0 0 0 0 0
-			
 			linesShift = 46;
 			columnsShift = 43;
-		
-			shiftsMap.Add(new KeyValuePair<int, int[]>(0, new int[] { 13, 14 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(1, new int[] { 12, 16 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(2, new int[] { 11, 17, 25 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(3, new int[] { 1, 2, 11, 15, 17, 18, 23, 25}));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(4, new int[] { 1, 2, 11, 17, 21, 22 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(5, new int[] { 12, 16, 21, 22, 35, 36 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(6, new int[] { 13, 14, 21, 22, 35, 36 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(7, new int[] { 23, 25 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(8, new int[] { 25 }));
 			
-			exit = Position.world(linesShift + 3, columnsShift + 12);
+			exit = Position.world(linesShift + 7, columnsShift + 6);
+			
+		} else if (levelNum == 1) {
+			linesShift = 44;
+			columnsShift = 43;
+
+			exit = Position.world(linesShift + 5, columnsShift + 12);
 		} else if (levelNum == 2){
-//			             5         10        15        20        25
-			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-			// 0 0 1 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 1 1 0 0
-			// 0 1 0 0 1 0 0 0 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 0 0 0 0 1 0 0 1 0
-			// 0 0 0 0 1 0 0 0 0 0 1 1 0 1 0 0 0 1 0 1 1 0 0 0 0 0 0 1 0 0 0 0
-			// 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0
-			// 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0
-			// 0 0 0 0 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 1 0 0 0 0
-			// 0 0 0 1 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 0 0 0
-			// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-			
-			shiftsMap.Add(new KeyValuePair<int, int[]>(1, new int[] { 2, 3, 4, 12, 18, 27, 28, 29 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(2, new int[] { 1, 5, 11, 12, 13, 17, 18, 19, 27, 30 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(3, new int[] { 4, 10, 11, 13, 17, 19, 20, 27 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(4, new int[] { 4, 27 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(5, new int[] { 4, 7, 23, 27 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(6, new int[] { 4, 7, 8, 22, 23, 27 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(7, new int[] { 3, 7, 8, 22, 23, 28 }));
-			
 			linesShift = 48;
 			columnsShift = 35;
+			
 			exit = Position.world(linesShift + 5, columnsShift + 13);
 		} else if (levelNum == 3) {
-//			        ............................**
-//				    ............................**
-//					............................*
-//					.........................*..*
-//					......................*....*
-//					.......**.............**.***.*
-//					.......*..***.*...***......**
-//					......*........*..**
-//					.....****.*.*....*
-//					.....**........*.**
-//					....*.........*****
-//					.***.*...........***
-//			13		*..*.............***
-//					.***.*...........***
-//					....*.........*****
-//					.....**........*.**
-//					.....****.*.*....*
-//					......*........*..**
-//					.......*..***.*...***......**
-//					.......**.............**.***.*
-//					......................*....*
-//					.........................*..*
-//					............................*
-//					............................**
-//					............................**
-
 			linesShift = 50;
 			columnsShift = 36;
-						
-			shiftsMap.Add(new KeyValuePair<int, int[]>(1, new int[] { 13 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(2, new int[] { 12, 14 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(3, new int[] { 12, 14 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(4, new int[] { 12, 14 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(5, new int[] { 12, 13, 14 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(6, new int[] { 11, 15 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(7, new int[] { 9, 10, 12, 14, 16, 17 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(8, new int[] { 6, 7, 9, 17, 19, 20 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(9, new int[] { 6, 9, 17, 20 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(10, new int[] { }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(11, new int[] { 7, 9, 17, 19 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(12, new int[] { 7, 19 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(13, new int[] { 7, 9, 17, 19 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(14, new int[] { }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(15, new int[] { 7, 11, 15, 19 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(16, new int[] { 8, 10, 11, 15, 16, 18 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(17, new int[] { 11, 15 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(18, new int[] { 9, 10, 11, 12, 13, 14, 15, 16, 17 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(19, new int[] { 7, 8, 10, 11, 12, 13, 14, 15, 16, 18, 19 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(20, new int[] { 7, 8, 12, 13, 14, 18, 19 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(21, new int[] { 7, 19 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(22, new int[] { }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(23, new int[] { 5, 6, 20, 21 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(24, new int[] { 6, 20 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(25, new int[] { }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(26, new int[] { 4, 6, 20, 22 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(27, new int[] { 6, 20 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(28, new int[] { 5, 6, 7, 19, 20, 21 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(29, new int[] { 1, 2, 4, 5, 7, 19, 22, 23, 24, 25 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(30, new int[] { 1, 2, 6, 20, 24, 25 }));
-			
+									
 			exit = Position.world(53, 48);
 		} else if (levelNum == 4) {
-//			*...***
-//			***..*
-//			.*
-
-			shiftsMap.Add(new KeyValuePair<int, int[]>(1, new int[] { 2, 3 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(2, new int[] { 1, 2 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(3, new int[] { 2 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(4, new int[] { }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(5, new int[] { 3 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(6, new int[] { 2,3 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(7, new int[] { 3 }));
 
 			linesShift = 47;
 			columnsShift = 47;
 			
 			exit = Position.world(53, 50);
 		} else {
-//					 9
-//			....OO......OO....
-//			...O.O......O.O...
-//			...O..........O...
-//			OO.O..........O.OO
-//			OO.O.O..OO..O.O.OO
-//			...O.O.O..O.O.O...
-//			...O.O.O..O.O.O...
-//			OO.O.O..OO..O.O.OO
-//			OO.O..........O.OO
-//			...O..........O...
-//			...O.O......O.O...
-//			....OO......OO....
-			
-			shiftsMap.Add(new KeyValuePair<int, int[]>(1, new int[] {5, 6, 13, 14 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(2, new int[] {4, 6, 13, 15 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(3, new int[] {4, 15 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(4, new int[] {1, 2, 4, 15, 17, 18}));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(5, new int[] {1, 2, 4, 6, 9, 10, 13, 15, 17, 18}));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(6, new int[] {4, 6, 8, 11, 13, 15}));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(7, new int[] {4, 6, 8, 11, 13, 15}));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(8, new int[] {1, 2, 4, 6, 9, 10, 13, 15, 17, 18}));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(9, new int[] {1, 2, 4, 15, 17, 18}));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(10, new int[] {4, 15 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(11, new int[] {4, 6, 13, 15 }));
-			shiftsMap.Add(new KeyValuePair<int, int[]>(12, new int[] {5, 6, 13, 14 }));
-			
-			linesShift = 45;
+			linesShift = 46;
 			columnsShift = 44;
 			
 			exit = Position.world(53, 48);
-			
 		}
+		
+		TextAsset textFile = Resources.Load("Level" + levelNum) as TextAsset;
+		string text = textFile.text;
+		
+		string[] lines = text.Split('\n');
+		for(int l = 0; l < lines.Length; ++l) {
+			string line = lines[l];
+			List<int> items = new List<int>();
+			for (int i = 0; i < line.Length; ++i) {
+				if (line[i].Equals('O') || line[i].Equals('*')) {
+					items.Add(i);
+				}
+			}
+			shiftsMap.Add(new KeyValuePair<int, int[]>(l, items.ToArray()));
+		}
+		
 
 		int pointsCount = 0;
 		foreach(int[] points in shiftsMap.Values) {
@@ -304,10 +180,17 @@ public class GameOfLife : MonoBehaviour
 			for (int j = 0; j < gridColumns; ++j) {
 				GameObject o = _objectsMatrix [i, j];
 				CellController cellC = o.GetComponent<CellController> ();
+				
+				bool isExit = false;
+				
+				if (_exit.getLine() == (i + _horizontalShift) && _exit.getColumn() == (j + _verticalShift)) {
+					_gridController.DrawExit(i, j);
+					isExit = true;
+				}
+				
 				if (_activeGame [_horizontalShift + i, _verticalShift + j]) {
 					cellC.SetType (CellController.Type.ENEMY);
-				} else if (_exit.getLine() == (i + _horizontalShift) && _exit.getColumn() == (j + _verticalShift)) {
-					_gridController.DrawExit(i, j);
+				} else if (isExit) {
 					cellC.SetType(CellController.Type.EXIT);
 				} else {
 					cellC.SetType (CellController.Type.EMPTY);
