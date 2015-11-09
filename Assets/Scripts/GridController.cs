@@ -21,7 +21,6 @@ public class GridController : MonoBehaviour
 	float cellSize;
 
 	bool restart = false;
-	int nextLevel = 0;
 	float restartTimer;
 	public float restartDelay = 1f;
 	
@@ -52,7 +51,6 @@ public class GridController : MonoBehaviour
 	
 	public void Restart(int level) {
 		restart = true;
-		nextLevel = level;
 	}
 	
 	public GameObject[,] GetGrid() {
@@ -60,7 +58,7 @@ public class GridController : MonoBehaviour
 	}
 	
 	public void DrawExit(int line, int column) {
-		if (line == lines -1) {
+		if (line == lines - 1) {
 			//draw exit on top
 			GameObject bottom = mygrid[line, column];
 			float x = bottom.transform.position.x;
