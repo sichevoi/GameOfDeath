@@ -128,10 +128,20 @@ public class GameOfLife : MonoBehaviour
 			
 			exit = Position.world(50, 55);
 		} else if (levelNum == 16) {
-			linesShift = 45;
+			linesShift = 44;
 			columnsShift = 46;
 			
-			exit = Position.world(53, 50);
+			exit = Position.world(53, 55);
+		} else if (levelNum == 17) {
+			linesShift = 43;
+			columnsShift = 40;
+			
+			exit = Position.world(53, 55);
+		} else if (levelNum == 19) {
+			linesShift = 43;
+			columnsShift = 40;
+			
+			exit = Position.world(53, 55);
 		} else {
 			linesShift = 46;
 			columnsShift = 44;
